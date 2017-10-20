@@ -35,12 +35,18 @@ public class ListFilesServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-    	Properties prop = new Properties();
-    	InputStream input = new FileInputStream("config.properties");
-    	// load a properties file
-    	prop.load(input);
+		Properties prop = new Properties();
+		String filename = "config.properties";
+		InputStream input = ListFilesServlet.class.getClassLoader().getResourceAsStream(filename);
+		if(input==null){
+	            System.out.println("Joder Tio!!.. no se encuentra el archivo... " + filename);
+		    return;
+		}
 
-    	File[] files = new File(prop.getProperty("path")).listFiles();
+		//se carga el .properties
+		prop.load(input);
+
+		File[] files = new File(prop.getProperty("path")).listFiles();
 		List<String> names= new ArrayList<String>();
 		for(File f:files){
 			if(f.isFile())

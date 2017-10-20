@@ -21,12 +21,18 @@ public class GetFile extends HttpServlet {
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
 
-    	Properties prop = new Properties();
-    	InputStream input = new FileInputStream("config.properties");
-    	// load a properties file
-    	prop.load(input);
+		Properties prop = new Properties();
+		String filename = "config.properties";
+		InputStream input = ListFilesServlet.class.getClassLoader().getResourceAsStream(filename);
+		if(input==null){
+	            System.out.println("Joder Tio!!.. no se encuentra el archivo... " + filename);
+		    return;
+		}
 
-    	filePath= prop.getProperty("path") + File.separator + request.getParameter("name");
+		//se carga el .properties
+		prop.load(input);
+    	
+        filePath= prop.getProperty("path") + File.separator + request.getParameter("name");
         
         File file = new File(filePath);
         int length = 0;
